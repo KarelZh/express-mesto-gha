@@ -42,19 +42,11 @@ const createUser = async (req, res) => {
       return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
     }
     res.status(ERROR_500).send({message: 'Не удалось добавить пользователя'})});
-  //try {
-  //  const newUser = await new user(req.body);
-  //  return res.status(201).send(await newUser.save());
-  //} catch (error) {
-  //  if (error.name === 'ValidationEror') {
-  //    return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
-  //  }
-  //  return res.status(ERROR_500).send({message: 'Не удалось добавить пользователя'});
-  //};
 };
 
 const updateProfile = async (req, res) => {
-  user.findByIdAndUpdate(req.user._id, {name: 'Zhenya', about: 'Prof'})
+  const {name, about} = req.body;
+  user.findByIdAndUpdate(req.user._id, {name, about})
     .then(user => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
