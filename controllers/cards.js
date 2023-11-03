@@ -20,7 +20,7 @@ const createCard = async (req, res) => {
   card.create({name, link, owner})
     .then((card) => res.send(card))
     .catch((err) => {
-      if (err.name === 'ValidationEror') {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
       }
       res.status(ERROR_500).send({message: 'Не удалось добавить карточку'})});

@@ -31,7 +31,7 @@ const createUser = async (req, res) => {
   user.create({name, about, avatar})
   .then((user) => res.send(user))
   .catch((err) => {
-    if (err.name === 'ValidationEror') {
+    if (err.name === 'ValidationError') {
       return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
     }
     res.status(ERROR_500).send({message: 'Не удалось добавить пользователя'})});
@@ -50,7 +50,7 @@ const updateProfile = async (req, res) => {
   user.findByIdAndUpdate(req.user._id, {name: 'Zhenya', about: 'Prof'})
     .then(user => res.send(user))
     .catch((err) => {
-      if (err.name === 'ValidationEror') {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
       }
       res.status(ERROR_500).send({message: 'Не удалось обновить пользователя'})});
@@ -60,7 +60,7 @@ const updateAvatar = async (req, res) => {
   user.findByIdAndUpdate(req.user._id, {avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg'})
     .then(user => res.send(user))
     .catch((err) => {
-      if (err.name === 'ValidationEror') {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
       }
       res.status(ERROR_500).send({message: 'Не удалось обновить пользователя'})});
