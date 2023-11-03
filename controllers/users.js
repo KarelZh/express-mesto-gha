@@ -17,14 +17,21 @@ const getUserById = async (req, res) => {
   try {
     const {userId} = req.params;
     const users = await user.findById(userId);
+    if (!users) {
+      throw new Error('NotFound')
+    }
     return res.send(users);
   } catch (error) {
+    if (error.message === 'NotFound') {
+      return res.status(ERROR_404).send({message: "Пользователь не найден"})
+    }
     if (error.name === 'CastError') {
-      return res.status(ERROR_404).send({message: "Передан невалидный id"})
+      return res.status(ERROR_400).send({message: "Передан невалидный id"})
     }
     return res.status(ERROR_500).send({message: 'Пользователь не найден'});
   };
 };
+
 
 const createUser = async (req, res) => {
   const {name, about, avatar} = req.body;
