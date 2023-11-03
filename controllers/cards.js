@@ -1,4 +1,4 @@
-const { ERROR_400, ERROR_500 } = require("../constance/statusCode");
+const { ERROR_400, ERROR_500, ERROR_404 } = require("../constance/statusCode");
 const card = require("../models/card");
 
 
@@ -7,6 +7,9 @@ const getCards = async (req, res) => {
     const cards = await card.find({});
     return res.send(cards);
   } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(ERROR_404).send({message: "Карточки не найдены"})
+    }
     return res.status(ERROR_500).send({message: 'Ошибка на стороне сервера'});
   };
 };

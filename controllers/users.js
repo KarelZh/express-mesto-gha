@@ -27,15 +27,23 @@ const getUserById = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  try {
-    const newUser = await new user(req.body);
-    return res.status(201).send(await newUser.save());
-  } catch (error) {
-    if (error.name === 'ValidationEror') {
+  const {name, about, avatar} = req.body;
+  user.create({name, about, avatar})
+  .then((user) => res.send(user))
+  .catch((err) => {
+    if (err.name === 'ValidationEror') {
       return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
     }
-    return res.status(ERROR_500).send({message: 'Не удалось добавить пользователя'});
-  };
+    res.status(ERROR_500).send({message: 'Не удалось добавить пользователя'})});
+  //try {
+  //  const newUser = await new user(req.body);
+  //  return res.status(201).send(await newUser.save());
+  //} catch (error) {
+  //  if (error.name === 'ValidationEror') {
+  //    return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
+  //  }
+  //  return res.status(ERROR_500).send({message: 'Не удалось добавить пользователя'});
+  //};
 };
 
 const updateProfile = async (req, res) => {
