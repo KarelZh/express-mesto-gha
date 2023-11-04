@@ -6,7 +6,7 @@ const getUsers = async (req, res) => {
     const users = await user.find({});
     return res.send(users);
   } catch (error) {
-    if (error.name === 'CastError') {
+    if (error.name === 'NotFound') {
       return res.status(ERROR_404).send({message: "Пользователи не найдены"})
     }
     return res.status(ERROR_500).send({message: 'Ошибка на стороне сервера'});
@@ -36,7 +36,7 @@ const getUserById = async (req, res) => {
 const createUser = async (req, res) => {
   const {name, about, avatar} = req.body;
   user.create({name, about, avatar})
-  .then((user) => res.send(user))
+  .then((user) => res.status(201).send(user))
   .catch((err) => {
     if (err.name === 'ValidationError') {
       return res.status(ERROR_400).send({message: "Переданы некорректные данные"})
