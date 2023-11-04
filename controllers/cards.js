@@ -33,13 +33,40 @@ const deleteCard = async (req, res) => {
 };
 
 const updateLike = (req, res) => {
+  //try {
+  //  const {userId} = req.params;
+  //  const users = await user.findById(userId);
+  //  if (!users) {
+  //    throw new Error('NotFound')
+  //  }
+  //  return res.send(users);
+  //} catch (error) {
+  //  if (error.message === 'NotFound') {
+  //    return res.status(ERROR_404).send({message: "Пользователь не найден"})
+  //  }
+  //  if (error.name === 'CastError') {
+  //    return res.status(ERROR_400).send({message: "Передан невалидный id"})
+  //  }
+  //  return res.status(ERROR_500).send({message: 'Пользователь не найден'});
+  //};
   card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-  .then((card) => res.send(card))
-  .catch((err) => res.status(ERROR_500).send({message: 'Не удалось поставить лайк'}))};
+  .then((card) => {
+    if (!card) {
+      throw new Error('NotFound')
+    }
+    res.send(card)})
+  .catch((err) => {
+      if (error.message === 'NotFound') {
+        return res.status(ERROR_404).send({message: "Пользователь не найден"})
+      }
+      if (error.name === 'CastError') {
+        return res.status(ERROR_400).send({message: "Передан невалидный id"})
+      }
+    res.status(ERROR_500).send({message: 'Не удалось поставить лайк'})})};
 
 const deleteLike = (req, res) => {
   card.findByIdAndUpdate(
