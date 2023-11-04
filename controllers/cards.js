@@ -66,7 +66,8 @@ const updateLike = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_400).send({message: "Передан невалидный id"})
       }
-    res.status(ERROR_500).send({message: 'Не удалось поставить лайк'})})};
+    res.status(ERROR_500).send({message: 'Не удалось поставить лайк'})})
+};
 
 const deleteLike = (req, res) => {
   card.findByIdAndUpdate(
@@ -74,8 +75,19 @@ const deleteLike = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-  .then((card) => res.send(card))
-  .catch((err) => res.status(ERROR_500).send({message: 'Не удалось убрать лайк'}))};
+  .then((card) => {
+    if (!card) {
+      throw new Error('NotFound')
+    }
+    res.send(card)})
+  .catch((err) => {
+    if (err.message === 'NotFound') {
+      return res.status(ERROR_404).send({message: "Пользователь не найден"})
+    }
+    if (err.name === 'CastError') {
+      return res.status(ERROR_400).send({message: "Передан невалидный id"})
+    }
+    res.status(ERROR_500).send({message: 'Не удалось убрать лайк'})})};
 
 module.exports = {
   getCards,
