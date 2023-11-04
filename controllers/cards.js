@@ -60,10 +60,10 @@ const updateLike = (req, res) => {
     }
     res.send(card)})
   .catch((err) => {
-      if (error.message === 'NotFound') {
+      if (err.message === 'NotFound') {
         return res.status(ERROR_404).send({message: "Пользователь не найден"})
       }
-      if (error.name === 'CastError') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_400).send({message: "Передан невалидный id"})
       }
     res.status(ERROR_500).send({message: 'Не удалось поставить лайк'})})};
