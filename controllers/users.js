@@ -56,7 +56,8 @@ const updateProfile = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
-  user.findByIdAndUpdate(req.user._id, {avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg'})
+  const {avatar} = req.body;
+  user.findByIdAndUpdate(req.user._id, {avatar}, {new: true, runValidators: true})
     .then(user => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
