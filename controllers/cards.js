@@ -87,7 +87,8 @@ const deleteLike = (req, res) => {
     if (err.name === 'CastError') {
       return res.status(ERROR_400).send({message: "Передан невалидный id"})
     }
-    res.status(ERROR_500).send({message: 'Не удалось убрать лайк'})})};
+    res.status(ERROR_500).send({message: 'Не удалось убрать лайк'})})
+};
 
 module.exports = {
   getCards,
