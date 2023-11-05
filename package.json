@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "eslint ."
+    "lint": "npx eslint ."
   },
   "keywords": [],
   "author": "",
@@ -20,8 +20,5 @@
   "dependencies": {
     "express": "^4.18.2",
     "mongoose": "^7.6.4"
-  },
-  "rules": {
-    "no-underscore-dangle": ["error", { "allow": ["_id"]}]
   }
 }

@@ -1,5 +1,7 @@
-const { Router } = require("express");
-const { getCards, createCard, deleteCard, updateLike, deleteLike } = require("../controllers/cards");
+const { Router } = require('express');
+const {
+  getCards, createCard, deleteCard, updateLike, deleteLike,
+} = require('../controllers/cards');
 
 const cardRouter = Router();
 

@@ -7,5 +7,5 @@ const ERROR_500 = http2.constants.HTTP_STATUS_INTERNAL_SERVER_ERROR;
 module.exports = {
   ERROR_400,
   ERROR_404,
-  ERROR_500
+  ERROR_500,
 };
