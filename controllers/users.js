@@ -14,9 +14,6 @@ const getUsers = async (req, res, next) => {
     const users = await user.find({});
     return res.send(users);
   } catch (error) {
-    if (error.name === 'NotFound') {
-      next(new NotFound('Пользователи не найдены'));
-    }
     next(error);
   }
 };
@@ -30,9 +27,6 @@ const getUserById = async (req, res, next) => {
     }
     return res.send(users);
   } catch (error) {
-    if (error.message === 'NotFound') {
-      next(new NotFound('Пользователь не найден'));
-    }
     next(error)
   }
 };
@@ -41,12 +35,12 @@ const createUser = async (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
   const hash = await bcrypt.hash(password, SOLT_ROUNDS)
   user.create({ name, about, avatar, email, password: hash })
-    .then((user) => res.status(201).send(
-      user._id, user.name, user.about, user.avatar, user.email
-    ))
+    .then((user) => res.status(201).send({
+      _id, name, about, avatar, email
+    }))
     .catch((error) => {
       if (error.code === 11000) {
-        next(new ConflictError('Такой пользователь уже существует'));
+        return next(new ConflictError('Такой пользователь уже существует'));
       }
       if (error.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные'));
@@ -59,10 +53,10 @@ const login = async (req, res, next) => {
   return user.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id}, 'some-secret-key', {expiresIn: '7d'})
-      res.status(200).send({ token })
+      res.send({ token })
     }).catch((error) => {
       if (error.name === 'UnauthorizedError') {
-        next(new UnauthorizedError('Переданы некорректные данные'));
+        return next(new UnauthorizedError('Переданы некорректные данные'));
       }
       next(error);
     });
@@ -85,7 +79,7 @@ const updateProfile = async (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные'));
+        return next(new ValidationError('Переданы некорректные данные'));
       }
       next(err);
     });
@@ -97,7 +91,7 @@ const updateAvatar = async (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные'));
+        return next(new ValidationError('Переданы некорректные данные'));
       }
       next(err);
     });

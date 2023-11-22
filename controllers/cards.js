@@ -9,9 +9,6 @@ const getCards = async (req, res, next) => {
     const cards = await card.find({});
     return res.send(cards);
   } catch (error) {
-    if (error.name === 'NotFound') {
-      next(new NotFound('Карточки не найдены' ));
-    }
     next(error);
   }
 };
@@ -23,7 +20,7 @@ const createCard = async (req, res, next) => {
     .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные'));
+        return next(new ValidationError('Переданы некорректные данные'));
       }
       next(err);
     });

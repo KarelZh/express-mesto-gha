@@ -8,21 +8,21 @@ const userRouter = Router();
 
 userRouter.get('/', auth, getUsers);
 userRouter.get('/me', auth, getMe);
-userRouter.get('/:userId', celebrate({
+userRouter.get('/:userId', auth, celebrate({
   params: Joi.object().keys({
     userId: Joi.string().length(24).hex().required(),
   }),
-}), auth, getUserById);
-userRouter.patch('/me', celebrate({
+}), getUserById);
+userRouter.patch('/me', auth, celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
     about: Joi.string().min(2).max(30).required(),
   }),
-}), auth, updateProfile);
-userRouter.patch('/me/avatar', celebrate({
+}), updateProfile);
+userRouter.patch('/me/avatar', auth, celebrate({
   body: Joi.object().keys({
     avatar: Joi.string().pattern(allowedUrl).required(),
   }),
-}), auth, updateAvatar);
+}), updateAvatar);
 
 module.exports = userRouter;

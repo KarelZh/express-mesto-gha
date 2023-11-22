@@ -23,6 +23,6 @@ module.exports = {
   },
   rules: {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
-    'eslint-disable': 'consistent-return',
+    'eslint-disable': 'eol-last',
   },
 };

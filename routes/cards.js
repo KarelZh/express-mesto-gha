@@ -9,26 +9,26 @@ const {allowedUrl} = require('../utils/isLink');
 const cardRouter = Router();
 
 cardRouter.get('/', auth, getCards);
-cardRouter.post('/', celebrate({
+cardRouter.post('/', auth, celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().required().pattern(allowedUrl),
   }),
-}), auth, createCard);
-cardRouter.delete('/:cardId', celebrate({
+}), createCard);
+cardRouter.delete('/:cardId', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
 }), deleteCard);
-cardRouter.put('/:cardId/likes', celebrate({
+cardRouter.put('/:cardId/likes', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
-}), auth, updateLike);
-cardRouter.delete('/:cardId/likes', celebrate({
+}), updateLike);
+cardRouter.delete('/:cardId/likes', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
-}), auth, deleteLike);
+}), deleteLike);
 
 module.exports = cardRouter;

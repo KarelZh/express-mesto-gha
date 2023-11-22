@@ -4,6 +4,8 @@ const cardRouter = require('./cards');
 const { login, createUser } = require('../controllers/users');
 const { celebrate, Joi } = require('celebrate');
 const {allowedUrl} = require('../utils/isLink');
+const auth = require('../middlewares/auth');
+const NotFound = require('../errors/NotFoundError');
 
 const router = Router();
 
@@ -24,8 +26,8 @@ router.post('/signup', celebrate({
     password: Joi.string().required().min(8),
   }),
 }), createUser);
-router.all('*', (req, res) => {
-  res.status(404).send({ message: 'Неправильный путь' });
+router.all('*', auth, (req, res) => {
+  throw new NotFound('Неправильный путь');
 });
 
 module.exports = router;
