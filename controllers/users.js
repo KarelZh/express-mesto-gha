@@ -72,7 +72,7 @@ const getMe = (req, res, next) => {
       if (!pols) {
         throw new NotFound('Запрашиваемый пользователь не найден');
       }
-      return res.send(...user);
+      return res.send(...pols);
     })
     .catch(next);
 };
