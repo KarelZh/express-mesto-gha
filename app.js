@@ -1,9 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 const router = require('./routes');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./errors/errorsHandler');
-const { errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 

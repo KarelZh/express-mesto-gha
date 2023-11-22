@@ -9,5 +9,5 @@ module.exports = {
   ERROR_400,
   ERROR_404,
   ERROR_500,
-  ERROR_409
+  ERROR_409,
 };

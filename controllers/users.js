@@ -1,7 +1,7 @@
+/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
-const { ERROR_400, ERROR_500, ERROR_404, ERROR_409 } = require('../constance/statusCode');
-const user = require('../models/user');
 const bcrypt = require('bcrypt');
+const user = require('../models/user');
 const NotFound = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
@@ -27,16 +27,20 @@ const getUserById = async (req, res, next) => {
     }
     return res.send(users);
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 const createUser = async (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
-  const hash = await bcrypt.hash(password, SOLT_ROUNDS)
-  user.create({ name, about, avatar, email, password: hash })
-    .then((user) => res.status(201).send({
-      _id, name, about, avatar, email
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+  const hash = await bcrypt.hash(password, SOLT_ROUNDS);
+  user.create({
+    name, about, avatar, email, password: hash,
+  })
+    .then((pols) => res.status(201).send({
+      _id: pols._id, name: pols.name, about: pols.about, avatar: pols.avatar, email: pols.email,
     }))
     .catch((error) => {
       if (error.code === 11000) {
@@ -51,9 +55,9 @@ const createUser = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   return user.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id}, 'some-secret-key', {expiresIn: '7d'})
-      res.send({ token })
+    .then((pols) => {
+      const token = jwt.sign({ _id: pols._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.send({ token });
     }).catch((error) => {
       if (error.name === 'UnauthorizedError') {
         return next(new UnauthorizedError('Переданы некорректные данные'));
@@ -64,8 +68,8 @@ const login = async (req, res, next) => {
 const getMe = (req, res, next) => {
   const { _id } = req.user;
   user.find({ _id })
-    .then((user) => {
-      if (!user) {
+    .then((pols) => {
+      if (!pols) {
         throw new NotFound('Запрашиваемый пользователь не найден');
       }
       return res.send(...user);
@@ -76,7 +80,7 @@ const getMe = (req, res, next) => {
 const updateProfile = async (req, res, next) => {
   const { name, about } = req.body;
   user.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .then((user) => res.send(user))
+    .then((pols) => res.send(pols))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new ValidationError('Переданы некорректные данные'));
@@ -88,7 +92,7 @@ const updateProfile = async (req, res, next) => {
 const updateAvatar = async (req, res, next) => {
   const { avatar } = req.body;
   user.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .then((user) => res.send(user))
+    .then((pols) => res.send(pols))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new ValidationError('Переданы некорректные данные'));
@@ -104,5 +108,5 @@ module.exports = {
   updateProfile,
   updateAvatar,
   login,
-  getMe
+  getMe,
 };

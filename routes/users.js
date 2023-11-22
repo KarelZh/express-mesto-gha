@@ -1,10 +1,12 @@
 const { Router } = require('express');
-const { getUsers, getUserById, updateProfile, updateAvatar, getMe  } = require('../controllers/users');
-const auth = require('../middlewares/auth');
 const { celebrate, Joi } = require('celebrate');
-const {allowedUrl} = require('../utils/isLink');
-const userRouter = Router();
+const {
+  getUsers, getUserById, updateProfile, updateAvatar, getMe,
+} = require('../controllers/users');
+const auth = require('../middlewares/auth');
+const { allowedUrl } = require('../utils/isLink');
 
+const userRouter = Router();
 
 userRouter.get('/', auth, getUsers);
 userRouter.get('/me', auth, getMe);

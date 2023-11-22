@@ -1,10 +1,10 @@
 const { Router } = require('express');
+const { celebrate, Joi } = require('celebrate');
 const {
   getCards, createCard, deleteCard, updateLike, deleteLike,
 } = require('../controllers/cards');
 const auth = require('../middlewares/auth');
-const { celebrate, Joi } = require('celebrate');
-const {allowedUrl} = require('../utils/isLink');
+const { allowedUrl } = require('../utils/isLink');
 
 const cardRouter = Router();
 

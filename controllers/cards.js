@@ -1,4 +1,4 @@
-const { ERROR_400, ERROR_500, ERROR_404 } = require('../constance/statusCode');
+/* eslint-disable consistent-return */
 const card = require('../models/card');
 const ValidationError = require('../errors/ValidationError');
 const NotFound = require('../errors/NotFoundError');
@@ -17,7 +17,7 @@ const createCard = async (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   card.create({ name, link, owner })
-    .then((card) => res.status(201).send(card))
+    .then((item) => res.status(201).send(item))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new ValidationError('Переданы некорректные данные'));
@@ -29,20 +29,20 @@ const createCard = async (req, res, next) => {
 const deleteCard = async (req, res, next) => {
   const removeCard = () => {
     card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
-      res.status(200).send(card);
-    })
-    .catch(next);
-  }
+      .then((item) => {
+        res.status(200).send(item);
+      })
+      .catch(next);
+  };
   card.findById(req.params.cardId)
-    .then((card) => {
-      if (!card) {
+    .then((item) => {
+      if (!item) {
         throw new NotFound('Карточки не существует');
       }
-      if (card.owner.toString() === req.user._id) {
+      if (item.owner.toString() === req.user._id) {
         return removeCard();
       }
-      return next(new ForbiddenError('Попытка удалить чужую карточку'))
+      return next(new ForbiddenError('Попытка удалить чужую карточку'));
     })
     .catch(next);
 };
@@ -53,11 +53,11 @@ const updateLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .then((card) => {
-      if (!card) {
+    .then((item) => {
+      if (!item) {
         return next(new NotFound('Карточки не существует'));
       }
-      res.send(card);
+      res.send(item);
     })
     .catch(next);
 };
@@ -68,11 +68,11 @@ const deleteLike = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .then((card) => {
-      if (!card) {
+    .then((item) => {
+      if (!item) {
         return next(new NotFound('Карточки не существует'));
       }
-      res.send(card);
+      res.send(item);
     })
     .catch(next);
 };

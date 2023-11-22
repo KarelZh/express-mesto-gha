@@ -1,9 +1,9 @@
 const { Router } = require('express');
+const { celebrate, Joi } = require('celebrate');
 const userRouter = require('./users');
 const cardRouter = require('./cards');
 const { login, createUser } = require('../controllers/users');
-const { celebrate, Joi } = require('celebrate');
-const {allowedUrl} = require('../utils/isLink');
+const { allowedUrl } = require('../utils/isLink');
 const auth = require('../middlewares/auth');
 const NotFound = require('../errors/NotFoundError');
 
@@ -26,7 +26,8 @@ router.post('/signup', celebrate({
     password: Joi.string().required().min(8),
   }),
 }), createUser);
-router.all('*', auth, (req, res) => {
+
+router.all('*', auth, () => {
   throw new NotFound('Неправильный путь');
 });
 

@@ -1,5 +1,5 @@
 const { default: mongoose } = require('mongoose');
-const { default: isEmail} = require('validator/lib/isEmail');
+const { default: isEmail } = require('validator/lib/isEmail');
 const bcrypt = require('bcrypt');
 const { default: isURL } = require('validator/lib/isURL');
 const UnauthorizedError = require('../errors/UnauthorizedError');
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => isEmail(v),
-      message: 'Неккоректный формат почты'
+      message: 'Неккоректный формат почты',
     },
     unique: true,
   },
@@ -38,11 +38,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
-  }
+  },
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({email}, {runValidators: true})
+  return this.findOne({ email }, { runValidators: true })
     .select('+password')
     .then((user) => {
       if (!user) {
