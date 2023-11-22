@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = require('./routes');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./errors/errorsHandler');
+const { errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
 });
 app.use(router);
 app.use(auth);
+app.use(errors);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
