@@ -41,7 +41,7 @@ const createUser = async (req, res, next) => {
   const hash = await bcrypt.hash(password, SOLT_ROUNDS)
   user.create({ name, about, avatar, email, password: hash })
     .then((user) => res.status(201).send(
-      user.name, user.about, user.avatar, user.email
+      user._id, user.name, user.about, user.avatar, user.email
     ))
     .catch((error) => {
       if (error.code === 11000) {
