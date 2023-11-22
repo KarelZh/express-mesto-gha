@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 });
 app.use(router);
 app.use(auth);
-app.use(errors);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
