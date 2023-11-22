@@ -42,11 +42,10 @@ const createUser = async (req, res, next) => {
   user.create({ name, about, avatar, email, password: hash })
     .then((user) => res.status(201).send(user))
     .catch((error) => {
-      if (error.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные'));
-      }
       if (error.code === 11000) {
         next(new ConflictError('Такой пользователь уже существует'));
+      } else if (error.name === 'ValidationError') {
+        next(new ValidationError('Переданы некорректные данные'));
       }
       next(error);
     });
