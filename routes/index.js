@@ -1,11 +1,29 @@
 const { Router } = require('express');
 const userRouter = require('./users');
 const cardRouter = require('./cards');
+const { login, createUser } = require('../controllers/users');
+const { celebrate, Joi } = require('celebrate');
+const {allowedUrl} = require('../utils/isLink');
 
 const router = Router();
 
 router.use('/users', userRouter);
 router.use('/cards', cardRouter);
+router.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+router.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(allowedUrl),
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), createUser);
 router.all('*', (req, res) => {
   res.status(404).send({ message: 'Неправильный путь' });
 });

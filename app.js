@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = require('./routes');
+const auth = require('./middlewares/auth');
+const errorHandler = require('./errors/errorsHandler');
 
 const { PORT = 3000 } = process.env;
 
@@ -15,6 +17,8 @@ app.use((req, res, next) => {
   next();
 });
 app.use(router);
+app.use(auth);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log('Сервер создан');
