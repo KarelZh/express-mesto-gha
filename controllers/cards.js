@@ -33,7 +33,7 @@ const deleteCard = async (req, res, next) => {
   const removeCard = () => {
     card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      res.send(card);
+      res.status(200).send(card);
     })
     .catch(next);
   }

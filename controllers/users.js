@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const NotFound = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const SOLT_ROUNDS = 10;
 
@@ -60,27 +61,12 @@ const login = async (req, res, next) => {
       const token = jwt.sign({ _id: user._id}, 'some-secret-key', {expiresIn: '7d'})
       res.status(200).send({ token })
     }).catch((error) => {
-      if (error.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные'));
+      if (error.name === 'UnauthorizedError') {
+        next(new UnauthorizedError('Переданы некорректные данные'));
       }
       next(error);
     });
 };
-//const getMe = async (req, res) => {
-//  const {_id}  = req.user;
-//  return user.find({_id})
-//    .then((user) => {
-//      if (!user) {
-//        return res.status(ERROR_400).send('Запрашиваемый пользователь не найден');
-//      }
-//      return res.status(200).send(...user);
-//    }).catch((error) => {
-//        if (error.name === 'ValidationError') {
-//          return res.status(ERROR_400).send({ message: 'Переданы некорректные данные' });
-//        }
-//        res.status(ERROR_500).send({ message: 'Не удалось найти пользователя' });
-//     })
-//}
 const getMe = (req, res, next) => {
   const { _id } = req.user;
   user.find({ _id })
